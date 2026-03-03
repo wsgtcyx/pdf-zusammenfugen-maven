@@ -1,0 +1,26 @@
+name: release-preparation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify-release-profile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Verify (release profile, no signing)
+        run: mvn -B -Prelease -Dgpg.skip=true verify
+
+      - name: Hinweis fuer spaeteres automatisches Publishing
+        run: |
+          echo "Dieses Workflow ist als Vorbereitung gedacht."
+          echo "Fuer auto publish spaeter central token + gpg key als Secrets hinterlegen."
